@@ -3,7 +3,7 @@ import SignUp from "@/components/sections/SignUp";
 import { Metadata } from "next";
 
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
     return {
         title: `Create Your Account - Join Us Today!`,
         description: `Join us today and create your account to unlock all the exclusive features we offer! By signing up, you'll enjoy a seamless and personalized experience, easy account management, and secure data storage. Get started now in just a few simple steps and make the most of what we have for you!`,

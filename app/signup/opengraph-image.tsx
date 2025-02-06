@@ -1,10 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export default async function Image({
-    params,
-}: {
-    params: { slug: string };
-}): Promise<ImageResponse> {
+export default async function Image(): Promise<ImageResponse> {
 
     return new ImageResponse(
         <div
