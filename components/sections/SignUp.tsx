@@ -1,13 +1,11 @@
 'use client'
 import { Alert, Button, Form, Input, Textarea } from "@heroui/react";
-import { IoMailOutline, IoLogIn } from "react-icons/io5";
-import { TbLockPassword } from "react-icons/tb";
+import { IoLogIn } from "react-icons/io5";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userValidationSchema } from "@/Validation/userValidation";
 import { z } from "zod";
 import { toast } from "sonner";
-import axios from "axios";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -90,7 +88,7 @@ const SignUp = () => {
                 <Input
                     {...register("userName")}
                     type="text"
-                    variant="faded"
+                    variant="underlined"
                     color="default"
                     placeholder="Enter Your Username"
                     label="Username"
@@ -113,7 +111,7 @@ const SignUp = () => {
                 <Input
                     {...register("firstName")}
                     type="text"
-                    variant="faded"
+                    variant="underlined"
                     color="default"
                     placeholder="Enter Your First Name"
                     label="First Name"
@@ -136,7 +134,7 @@ const SignUp = () => {
                 <Input
                     {...register("secondName")}
                     type="text"
-                    variant="faded"
+                    variant="underlined"
                     color="default"
                     placeholder="Enter Your Last Name"
                     label="Last Name"
@@ -159,7 +157,7 @@ const SignUp = () => {
                 <Input
                     {...register("email")}
                     type="email"
-                    variant="faded"
+                    variant="underlined"
                     color="default"
                     placeholder="Enter Your Email"
                     label="Email"
@@ -182,7 +180,7 @@ const SignUp = () => {
                 <Input
                     {...register("password")}
                     type="password"
-                    variant="faded"
+                    variant="underlined"
                     color="default"
                     placeholder="Enter Your Password"
                     label="Password"
@@ -210,7 +208,7 @@ const SignUp = () => {
                     isClearable
                     type="file"
                     accept="image/*"
-                    variant="faded"
+                    variant="underlined"
                     color="default"
                     description="Upload a clear picture of yourself. This will be used for your profile."
                 />
