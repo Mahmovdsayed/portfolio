@@ -10,6 +10,8 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ConfettiFireworks } from "@/functions/ConfettiFireworks";
+import { EyeSlashFilledIcon } from "@/icons/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "@/icons/EyeFilledIcon";
 
 type FormInputs = z.infer<typeof userValidationSchema>;
 
@@ -23,6 +25,9 @@ const SignUp = () => {
     });
     const [loading, setLoading] = useState(false);
     const router = useRouter()
+    const [isVisible, setIsVisible] = useState(false);
+    const toggleVisibility = () => setIsVisible(!isVisible);
+
     const onSubmit: SubmitHandler<FormInputs> = async (data) => {
         try {
             setLoading(true);
@@ -179,17 +184,30 @@ const SignUp = () => {
             >
                 <Input
                     {...register("password")}
-                    type="password"
                     variant="underlined"
                     color="default"
                     placeholder="Enter Your Password"
                     label="Password"
                     labelPlacement="inside"
                     className="mb-1"
-                    isClearable
                     isRequired
                     radius="sm"
                     description="It should be at least 6 characters."
+                    endContent={
+                        <button
+                            aria-label="toggle password visibility"
+                            className="focus:outline-none"
+                            type="button"
+                            onClick={toggleVisibility}
+                        >
+                            {isVisible ? (
+                                <EyeSlashFilledIcon />
+                            ) : (
+                                <EyeFilledIcon />
+                            )}
+                        </button>
+                    }
+                    type={isVisible ? "text" : "password"}
                 />
                 {errors.password && <Alert radius="sm" className="mb-1" color="danger" title={errors.password.message} />}
             </motion.div>
