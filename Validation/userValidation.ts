@@ -58,5 +58,8 @@ export const userValidationSchema = z.object({
     .refine((file) => file.size <= 5 * 1024 * 1024, {
       message: "Image size should be less than 5MB",
     })
-    .optional(), 
+    .optional(),
+  acceptTerms: z.boolean().refine((val) => val === true, {
+    message: "You must accept the terms and conditions",
+  }),
 });
