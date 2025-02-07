@@ -1,8 +1,6 @@
 import TextHeader from "@/components/layout/TextHeader";
 import SignUp from "@/components/sections/SignUp";
-import { Divider } from "@heroui/react";
 import { Metadata } from "next";
-import Link from "next/link";
 
 
 export async function generateMetadata(): Promise<Metadata> {
