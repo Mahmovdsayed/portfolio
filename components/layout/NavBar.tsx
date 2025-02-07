@@ -1,88 +1,124 @@
-'use client'
+"use client";
+
+import type { NavbarProps } from "@heroui/react";
+
 import React from "react";
 import {
     Navbar,
     NavbarBrand,
     NavbarContent,
     NavbarItem,
-    NavbarMenuToggle,
     NavbarMenu,
     NavbarMenuItem,
+    NavbarMenuToggle,
     Link,
     Button,
+    Divider,
 } from "@heroui/react";
+import { cn } from "@heroui/react";
 
-const NavBar = () => {
+
+const menuItems = [
+    "About",
+    "Blog",
+    "Customers",
+    "Pricing",
+    "Enterprise",
+    "Changelog",
+    "Documentation",
+    "Contact Us",
+];
+
+export default function Component(props: NavbarProps) {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    const menuItems = [
-        "Profile",
-        "Dashboard",
-        "Activity",
-        "Analytics",
-        "System",
-        "Deployments",
-        "My Settings",
-        "Team Settings",
-        "Help & Feedback",
-        "Log Out",
-    ];
-    return <>
-        <Navbar isBlurred isBordered onMenuOpenChange={setIsMenuOpen}>
-            <NavbarContent>
-                <NavbarMenuToggle
-                    aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-                    className="sm:hidden"
-                />
-                <NavbarBrand>
-                    <p className="font-bold text-inherit">Portfolio</p>
-                </NavbarBrand>
-            </NavbarContent>
 
-            <NavbarContent className="hidden sm:flex gap-4" justify="center">
+    return (
+        <Navbar
+            {...props}
+            classNames={{
+                base: cn("border-default-100", {
+                    "bg-default-200/50 dark:bg-default-100/50": isMenuOpen,
+                }),
+                wrapper: "w-full justify-center",
+                item: "hidden md:flex",
+            }}
+            height="60px"
+            isMenuOpen={isMenuOpen}
+            onMenuOpenChange={setIsMenuOpen}
+        >
+            <NavbarBrand>
+                <div className="rounded-full bg-foreground text-background">
+
+                </div>
+                <span className="ml-2 text-small font-medium">PORTFOLIO</span>
+            </NavbarBrand>
+
+            <NavbarContent justify="center">
                 <NavbarItem>
-                    <Link color="foreground" href="#">
+                    <Link className="text-default-500" href="#" size="sm">
+                        Home
+                    </Link>
+                </NavbarItem>
+                <NavbarItem>
+                    <Link className="text-default-500" href="#" size="sm">
                         Features
                     </Link>
                 </NavbarItem>
                 <NavbarItem isActive>
-                    <Link aria-current="page" href="#">
+                    <Link aria-current="page" color="foreground" href="#" size="sm">
                         Customers
                     </Link>
                 </NavbarItem>
                 <NavbarItem>
-                    <Link color="foreground" href="#">
+                    <Link className="text-default-500" href="#" size="sm">
+                        About Us
+                    </Link>
+                </NavbarItem>
+                <NavbarItem>
+                    <Link className="text-default-500" href="#" size="sm">
                         Integrations
                     </Link>
                 </NavbarItem>
             </NavbarContent>
-            <NavbarContent justify="end">
-                <NavbarItem className="hidden lg:flex">
-                    <Link href="#">Login</Link>
-                </NavbarItem>
-                <NavbarItem>
-                    <Button className="bg-[#181818] text-white" size="sm" radius="full" as={Link} color="primary" href="#" variant="flat">
-                        Sign Up
+
+            <NavbarContent className="hidden md:flex" justify="end">
+                <NavbarItem className="ml-2 !flex gap-2">
+                    <Button className="text-default-500" radius="full" variant="light">
+                        Login
+                    </Button>
+                    <Button
+                        className="bg-foreground font-medium text-background"
+                        color="secondary"
+                        radius="full"
+                        variant="flat"
+                    >
+                        Get Started
                     </Button>
                 </NavbarItem>
             </NavbarContent>
-            <NavbarMenu>
+
+            <NavbarMenuToggle className="text-default-400 md:hidden" />
+
+            <NavbarMenu className="top-[calc(var(--navbar-height)_-_1px)] max-h-fit bg-default-200/50 pb-6 pt-6 shadow-medium backdrop-blur-md backdrop-saturate-150 dark:bg-default-100/50">
+                <NavbarMenuItem>
+                    <Button className="text-black dark:text-white" fullWidth as={Link} href="/#" variant="faded">
+                        Sign In
+                    </Button>
+                </NavbarMenuItem>
+                <NavbarMenuItem className="mb-4">
+                    <Button fullWidth as={Link} className="bg-foreground text-background" href="/#">
+                        Get Started
+                    </Button>
+                </NavbarMenuItem>
                 {menuItems.map((item, index) => (
                     <NavbarMenuItem key={`${item}-${index}`}>
-                        <Link
-                            className="w-full"
-                            color={
-                                index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
-                            }
-                            href="#"
-                            size="lg"
-                        >
+                        <Link className="mb-2 w-full text-default-500" href="#" size="md">
                             {item}
                         </Link>
+                        {index < menuItems.length - 1 && <Divider className="opacity-50" />}
                     </NavbarMenuItem>
                 ))}
             </NavbarMenu>
         </Navbar>
-    </>;
-};
-
-export default NavBar;
+    );
+}

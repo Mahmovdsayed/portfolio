@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className="light" lang="en">
+    <html className="dark" lang="en">
       <body className={` antialiased`}>
         <Providers>
           <NavBar />

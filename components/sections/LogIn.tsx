@@ -13,8 +13,22 @@ import { EyeFilledIcon } from "@/icons/EyeFilledIcon";
 import { ConfettiCustomShapes } from "@/functions/ConfettiCustomShapes";
 
 const loginSchema = z.object({
-    email: z.string().email("Invalid email address").min(1, "Email is required"),
-    password: z.string().min(6, "Password must be at least 6 characters").max(20, "Password max length is 20"),
+    email: z
+        .string()
+        .trim()
+        .email({ message: "Invalid email format" })
+        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+            message: "Invalid email format",
+        }),
+
+    password: z
+        .string()
+        .min(6, { message: "Password must be at least 6 characters" })
+        .max(30, { message: "Password must be at most 30 characters" })
+        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
+            message:
+                "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+        }),
 });
 
 const LogIn = () => {
@@ -142,7 +156,7 @@ const LogIn = () => {
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3, delay: 0.8 }}>
                     <Button
                         startContent={isSubmitting ? <Spinner size="sm" color="white" /> : <IoLogIn />}
-                        className="w-full font-sharpSansSemiBold bg-[#181818] text-white"
+                        className="w-full font-sharpSansSemiBold bg-[#181818] text-white dark:bg-[#d9d9d9] dark:text-black"
                         radius="full"
                         type="submit"
                         isDisabled={isSubmitting || !values.email || !values.password}

@@ -269,7 +269,7 @@ const SignUp = () => {
                 >
                     <Button
                         startContent={loading ? <Spinner size="sm" color="white" /> : <IoLogIn />} type="submit"
-                        className="w-full bg-[#181818] text-white font-medium mt-3"
+                        className="w-full bg-[#181818] dark:bg-[#d9d9d9] dark:text-black text-white font-medium mt-3"
                         radius="full"
                         isDisabled={Object.keys(errors).length > 0 || loading || !acceptTerms}
                     >
