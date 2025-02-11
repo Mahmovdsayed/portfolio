@@ -91,26 +91,21 @@ export const POST = async (req: Request) => {
     ) => {
       const userFolderPath = `portfolio/userImages/${userName}`;
 
-      try {
-        const uploadResult = await cloudinary.uploader.upload(
-          `data:${imageType};base64,${buffer.toString("base64")}`,
-          {
-            folder: userFolderPath,
-            wihdth: 500,
-            height: 500,
-            crop: "fill",
-            gravity: "faces",
-            use_filename: true,
-            unique_filename: false,
-            quality: "80",
-          }
-        );
+      const uploadResult = await cloudinary.uploader.upload(
+        `data:${imageType};base64,${buffer.toString("base64")}`,
+        {
+          folder: userFolderPath,
+          wihdth: 500,
+          height: 500,
+          crop: "fill",
+          gravity: "faces",
+          use_filename: true,
+          unique_filename: false,
+          quality: "80",
+        }
+      );
 
-        return uploadResult;
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        return null;
-      }
+      return uploadResult;
     };
 
     if (image) {

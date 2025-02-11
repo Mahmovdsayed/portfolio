@@ -7,17 +7,6 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 const userValidationSchema = z.object({
-  userName: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .min(3, { message: "Username must be at least 3 characters" })
-    .max(20, { message: "Username must be at most 20 characters" })
-    .regex(/^[a-zA-Z0-9_]+$/, {
-      message: "Username can only contain letters, numbers, and underscores",
-    })
-    .optional(),
-
   firstName: z
     .string()
     .trim()
@@ -107,8 +96,7 @@ export const PATCH = async (req: Request) => {
       );
     }
 
-    const { firstName, secondName, userName, email, password } =
-      validationResult.data;
+    const { firstName, secondName, email, password } = validationResult.data;
 
     if (decoded.id !== userId) {
       return NextResponse.json(
@@ -143,25 +131,9 @@ export const PATCH = async (req: Request) => {
       );
     }
 
-    if (userName && userName !== existingUser.userName) {
-      const usernameExists = await User.findOne({ userName });
-      if (usernameExists) {
-        return NextResponse.json(
-          { status: false, errorMassage: "This username is already taken" },
-          { status: 400 }
-        );
-      }
-    } else if (userName === existingUser.userName) {
-      return NextResponse.json(
-        { status: false, errorMassage: "This username is already yours" },
-        { status: 200 }
-      );
-    }
-
     const updatedUser: Record<string, any> = {};
     if (firstName) updatedUser.firstName = firstName;
     if (secondName) updatedUser.secondName = secondName;
-    if (userName) updatedUser.userName = userName;
     if (email) updatedUser.email = email;
     if (password) {
       const hashedPassword = await bcrypt.hash(
