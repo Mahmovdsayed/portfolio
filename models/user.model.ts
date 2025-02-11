@@ -1,4 +1,5 @@
 import { Schema, model, models } from "mongoose";
+import ImageSchema from "./image.model";
 
 const userSchema = new Schema(
   {
@@ -10,6 +11,7 @@ const userSchema = new Schema(
       lowercase: true,
       minlength: [3, "Username must be at least 3 characters"],
       maxlength: [20, "Username must be at most 20 characters"],
+      index: true,
     },
     firstName: {
       type: String,
@@ -33,23 +35,20 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
       lowercase: true,
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please fill a valid email address",
+      ],
+      index: true,
     },
     password: {
       type: String,
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
     },
-    image: {
-      url: {
-        type: String,
-        default:
-          "https://res.cloudinary.com/dxvpvtcbg/image/upload/v1713493679/sqlpxs561zd9oretxkki.jpg", // default image
-      },
-      public_id: {
-        type: String,
-        required: false,
-      },
-    },
+    image: ImageSchema,
+    about: { type: String, trim: true },
+    bio: { type: String, trim: true },
   },
   { timestamps: true }
 );

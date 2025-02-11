@@ -21,7 +21,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
     return (
         <html className="light" lang="en">
-            <body className={` antialiased`}>
+            <body className={` antialiased bg-gray-100`}>
                 <Providers>
                     <DashboardNav user={user} />
                     {children}
