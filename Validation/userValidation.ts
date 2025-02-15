@@ -27,10 +27,10 @@ export const userValidationSchema = z.object({
   secondName: z
     .string()
     .trim()
-    .min(3, { message: "Second name must be at least 3 characters" })
-    .max(20, { message: "Second name must be at most 20 characters" })
+    .min(3, { message: "Last name must be at least 3 characters" })
+    .max(20, { message: "Last name must be at most 20 characters" })
     .regex(/^[A-Za-z]+$/, {
-      message: "Second name can only contain letters",
+      message: "Last name can only contain letters",
     })
     .transform((name) => name.charAt(0).toUpperCase() + name.slice(1)),
 

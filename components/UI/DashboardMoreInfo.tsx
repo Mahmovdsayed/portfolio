@@ -72,6 +72,15 @@ const DashboardMoreInfo = ({ user }: IProps) => {
                             <p className="font-medium text-default-600">Full-stack developer with expertise in React.js, Next.js, and Node.js. With 2 years of experience, I specialize in creating responsive web applications and scalable backend solutions. I’m passionate about contributing to impactful and innovative projects.</p>
                         </div>
                     </div>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
                     {/* <div>
                         <Image
                             src={user?.Userimage?.url}

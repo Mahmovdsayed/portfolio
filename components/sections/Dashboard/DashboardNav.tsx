@@ -33,7 +33,6 @@ const DashboardNav = ({ user }: { user: any }) => {
         { href: '/dashboard/projects', label: 'Projects', icon: <GrProjects /> },
         { href: '/dashboard/blog', label: 'Blog', icon: <FaBlog /> },
     ];
-    console.log(user)
 
     return <>
         <Navbar isBlurred isBordered>

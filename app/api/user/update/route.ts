@@ -5,49 +5,7 @@ import User from "@/models/user.model";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-
-const userValidationSchema = z.object({
-  firstName: z
-    .string()
-    .trim()
-    .min(3, { message: "First name must be at least 3 characters" })
-    .max(20, { message: "First name must be at most 20 characters" })
-    .regex(/^[A-Za-z]+$/, {
-      message: "First name can only contain letters",
-    })
-    .transform((name) => name.charAt(0).toUpperCase() + name.slice(1))
-    .optional(),
-
-  secondName: z
-    .string()
-    .trim()
-    .min(3, { message: "Second name must be at least 3 characters" })
-    .max(20, { message: "Second name must be at most 20 characters" })
-    .regex(/^[A-Za-z]+$/, {
-      message: "Second name can only contain letters",
-    })
-    .transform((name) => name.charAt(0).toUpperCase() + name.slice(1))
-    .optional(),
-
-  email: z
-    .string()
-    .trim()
-    .email({ message: "Invalid email format" })
-    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
-      message: "Invalid email format",
-    })
-    .optional(),
-
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" })
-    .max(30, { message: "Password must be at most 30 characters" })
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
-      message:
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-    })
-    .optional(),
-});
+import { updateUserSchema } from "@/Validation/updateUser";
 
 export const PATCH = async (req: Request) => {
   try {
@@ -70,7 +28,7 @@ export const PATCH = async (req: Request) => {
     }
 
     const requestData = await req.json();
-    const validationResult = userValidationSchema.safeParse(requestData);
+    const validationResult = updateUserSchema.safeParse(requestData);
 
     if (!validationResult.success) {
       return NextResponse.json(
@@ -96,7 +54,8 @@ export const PATCH = async (req: Request) => {
       );
     }
 
-    const { firstName, secondName, email, password } = validationResult.data;
+    const { firstName, secondName, email, password, about, bio } =
+      validationResult.data;
 
     if (decoded.id !== userId) {
       return NextResponse.json(
@@ -142,6 +101,8 @@ export const PATCH = async (req: Request) => {
       );
       updatedUser.password = hashedPassword;
     }
+    if (about) updatedUser.about = about;
+    if (bio) updatedUser.bio = bio;
 
     const user = await User.findByIdAndUpdate(userId, updatedUser, {
       new: true,

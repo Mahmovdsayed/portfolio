@@ -20,13 +20,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
     const user = await DecodeAndVerifyJWT()
 
     return (
-        <html className="light" lang="en">
-            <body className={` antialiased bg-gray-100`}>
-                <Providers>
-                    <DashboardNav user={user} />
-                    {children}
-                </Providers>
-            </body>
-        </html>
+        <div className={` antialiased bg-gray-100`}>
+            <Providers>
+                <DashboardNav user={user} />
+                {children}
+            </Providers>
+        </div>
     );
 }
