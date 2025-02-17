@@ -3,11 +3,8 @@ import User from "@/models/user.model";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import DOMPurify from "isomorphic-dompurify";
-import dotenv from "dotenv";
 import { connectToDatabase } from "@/lib/dbConnection";
 import sendEmailService from "@/lib/email";
-
-dotenv.config();
 
 // Cloudinary Config
 cloudinary.config({

@@ -121,6 +121,12 @@ const DashboardInfo = ({ data }: { data: any }) => {
                     <Divider className="my-4" />
                     <div className="flex flex-col items-start justify-center gap-3">
                         <div>
+                            <h5 className="font-semibold text-sm md:text-base">User ID:</h5>
+                            <p className="text-sm md:text-base text-default-600">
+                                {data?.user?._id}
+                            </p>
+                        </div>
+                        <div>
                             <h5 className="font-semibold text-sm md:text-base">User Name:</h5>
                             <p className="text-sm md:text-base text-default-600">
                                 {data?.user?.userName}
@@ -283,6 +289,7 @@ const DashboardInfo = ({ data }: { data: any }) => {
                         radius="sm"
                         className="mt-2 font-medium"
                         type="submit"
+                        isDisabled={isLoading}
                         isLoading={isLoading}
                     >
                         {isLoading ? "Saving..." : "Save"}

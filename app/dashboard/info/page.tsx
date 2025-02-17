@@ -9,7 +9,7 @@ const fetchData = async () => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Cookie: `userToken=${token}`,
+                "Cookie": `userToken=${token}`,
 
             },
             cache: "no-store",

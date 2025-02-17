@@ -1,8 +1,9 @@
-import { connectToDatabase } from "@/lib/dbConnection";
-import User from "@/models/user.model";
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { verifyToken } from "@/functions/verifyToken";
+import { connectToDatabase } from "@/lib/dbConnection";
+import Experience from "@/models/experience.model";
+import User from "@/models/user.model";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export const GET = async (req: Request) => {
   try {
@@ -17,32 +18,30 @@ export const GET = async (req: Request) => {
         { status: 401 }
       );
     }
-
-    const userId = decoded.id;
-
-    if (!userId) {
+    const userID = decoded.id;
+    if (!userID) {
       return NextResponse.json(
         { error: "Bad Request: User ID is required" },
         { status: 400 }
       );
     }
-
-    if (userId !== decoded.id) {
+    if (userID !== decoded.id) {
       return NextResponse.json(
         { error: "Unauthorized: You are not allowed to access this user data" },
         { status: 403 }
       );
     }
 
-    const user = await User.findById(userId).select("-password");
-    if (!user) {
-      return NextResponse.json(
-        { error: "Not Found: User not found" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(user);
+    const work = await Experience.find({ userID });
+    const total = await Experience.countDocuments({ userID });
+    return NextResponse.json(
+      {
+        success: true,
+        total,
+        work,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(
       { error: "Something went wrong!" },
