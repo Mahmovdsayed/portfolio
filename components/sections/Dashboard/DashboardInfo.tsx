@@ -212,23 +212,6 @@ const DashboardInfo = ({ data }: { data: any }) => {
                         <Alert color="warning" className="mt-2 font-medium" title={errors.secondName.message} />
                     )}
 
-                    {/* Email */}
-                    <Input
-                        {...register("email")}
-                        id="email"
-                        name="email"
-                        variant="bordered"
-                        labelPlacement="inside"
-                        label="Email"
-                        placeholder="Enter New Email"
-                        color="secondary"
-                        radius="sm"
-                        size="sm"
-                        type="email"
-                    />
-                    {errors.email && (
-                        <Alert color="warning" className="mt-2 font-medium" title={errors.email.message} />
-                    )}
 
                     {/* Password */}
                     <Input

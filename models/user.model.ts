@@ -53,6 +53,18 @@ const userSchema = new Schema(
       default: "No about provided yet",
     },
     bio: { type: String, trim: true, default: "No bio available yet" },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    otp: {
+      type: String,
+      default: null,
+    },
+    otpExpiry: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

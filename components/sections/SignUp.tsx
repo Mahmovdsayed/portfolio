@@ -57,7 +57,7 @@ const SignUp = () => {
                 });
                 ConfettiFireworks()
                 setTimeout(() => {
-                    router.push("/login");
+                    router.push(`/verify?email=${data.email}`);
                 }, 5000);
             } else {
                 toast.warning(result.message || "Failed to create user.", {

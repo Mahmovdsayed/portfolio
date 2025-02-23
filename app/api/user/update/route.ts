@@ -54,7 +54,7 @@ export const PATCH = async (req: Request) => {
       );
     }
 
-    const { firstName, secondName, email, password, about, bio } =
+    const { firstName, secondName, password, about, bio } =
       validationResult.data;
 
     if (decoded.id !== userId) {
@@ -72,28 +72,9 @@ export const PATCH = async (req: Request) => {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (email && email !== existingUser.email) {
-      const emailExists = await User.findOne({ email });
-      if (emailExists) {
-        return NextResponse.json(
-          {
-            status: false,
-            errorMassage: "This email is already in use by another user",
-          },
-          { status: 400 }
-        );
-      }
-    } else if (email === existingUser.email) {
-      return NextResponse.json(
-        { status: false, errorMassage: "This email is already yours" },
-        { status: 200 }
-      );
-    }
-
     const updatedUser: Record<string, any> = {};
     if (firstName) updatedUser.firstName = firstName;
     if (secondName) updatedUser.secondName = secondName;
-    if (email) updatedUser.email = email;
     if (password) {
       const hashedPassword = await bcrypt.hash(
         password,

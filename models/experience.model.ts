@@ -11,7 +11,25 @@ const ExperienceSchema = new Schema(
     companyImage: ImageSchema,
     userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
     current: { type: Boolean, default: false },
-    employmentType: { type: String, trim: true, required: true },
+    employmentType: {
+      type: String,
+      trim: true,
+      required: true,
+      enum: [
+        "Full-time",
+        "Part-time",
+        "Contract",
+        "Internship",
+        "Freelance",
+        "Remote",
+        "Temporary",
+        "Casual",
+        "Volunteer",
+        "Self-Employed",
+        "Apprenticeship",
+        "Other",
+      ],
+    },
   },
   { timestamps: true }
 );

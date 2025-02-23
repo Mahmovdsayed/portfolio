@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import DOMPurify from "isomorphic-dompurify";
 import { connectToDatabase } from "@/lib/dbConnection";
 import sendEmailService from "@/lib/email";
+import { generateOTP, sendOTPEmail } from "@/lib/sendOTPEmail";
 
 // Cloudinary Config
 cloudinary.config({
@@ -141,9 +142,12 @@ export const POST = async (req: Request) => {
       email,
       password: hashPassword,
       image: { url: imageUrl, public_id: publicId },
+      isVerified: false,
+      otp: generateOTP(),
+      otpExpiry: new Date(Date.now() + 10 * 60 * 1000),
     });
     await newUser.save();
-
+    await sendOTPEmail(newUser.email, newUser.otp);
     // Send welcome email
     await sendEmailService({
       to: email?.toString(),

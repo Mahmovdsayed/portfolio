@@ -14,7 +14,9 @@ const LogInFunction = async (email: string, password: string) => {
     if (!isEmailExist) {
       return { success: false, message: "Invalid login credentials" };
     }
-
+    if (!isEmailExist.isVerified) {
+      return { success: false, message: "Please verify your email first." };
+    }
     const isPassMatched = bcrypt.compareSync(password, isEmailExist.password);
     if (!isPassMatched) {
       return { success: false, message: "Invalid login credentials" };
