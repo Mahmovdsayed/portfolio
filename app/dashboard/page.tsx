@@ -1,4 +1,4 @@
-import DashboardHome from "@/components/sections/Dashboard/DashboardHome";
+import DashboardHome from "@/components/sections/Dashboard/Home/DashboardHome";
 import { DecodeAndVerifyJWT } from "@/functions/Decode";
 
 const Dashboard = async () => {

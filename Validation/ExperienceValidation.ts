@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 const ExperienceValidationSchema = z.object({
   companyName: z
     .string()
@@ -16,21 +18,21 @@ const ExperienceValidationSchema = z.object({
   description: z
     .string()
     .trim()
-    .min(10, "Description must be at least 10 characters long")
-    .max(500, { message: "Description must be at most 500 characters" })
-    .optional(),
+    .optional()
+    .refine((value) => !value || (value.length >= 10 && value.length <= 500), {
+      message: "Description must be between 10 and 500 characters",
+    }),
 
   from: z.string().trim(),
   to: z.string().trim().optional(),
 
   companyImage: z
-    .instanceof(File)
-    .refine((file) => file.type.startsWith("image/"), {
-      message: "Only image files are allowed",
-    })
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: "Image size should be less than 5MB",
-    })
+    .union([
+      z.instanceof(File).refine((file) => file.type.startsWith("image/"), {
+        message: "Only image files are allowed",
+      }),
+      z.null(),
+    ])
     .optional(),
 
   employmentType: z.enum(

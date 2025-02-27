@@ -26,7 +26,7 @@ export const POST = async (req: Request) => {
     }
 
     const formData = await req.formData();
-    const userID = formData.get("userID") as string;
+    const userID = decoded.id;
 
     if (decoded.id !== userID) {
       return NextResponse.json(
@@ -54,22 +54,25 @@ export const POST = async (req: Request) => {
     const positionName = formData.get("positionName") as string;
     const description = formData.get("description") as string;
     const from = formData.get("from") as string;
-    const to = formData.get("to") as string;
+    let to = formData.get("to") as string | null;
     const employmentType = formData.get("employmentType") as string;
     const companyImage = formData.get("companyImage") as File | null;
-    const current = formData.get("current") as string;
+    let current = formData.get("current") === "true";
+
+    if (!to && !current) {
+      current = true;
+    }
 
     let imageUrl =
       "https://res.cloudinary.com/dtpsyi5am/image/upload/v1739724057/gqcbculzlv44qoytlr3c.jpg";
     let publicId = "";
 
-    if (companyImage) {
-      const allowedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
+    if (companyImage && companyImage.size > 0) {
       if (!allowedImageTypes.includes(companyImage.type)) {
         return NextResponse.json(
           {
             success: false,
-            message: "Invalid image format. Allowed formats: PNG, JPEG, JPG",
+            error: "Invalid image format. Allowed formats: PNG, JPEG, JPG",
           },
           { status: 400 }
         );
@@ -95,10 +98,14 @@ export const POST = async (req: Request) => {
         publicId = uploadResult.public_id;
       } else {
         return NextResponse.json(
-          { success: false, message: "Failed to upload image to Cloudinary." },
+          { success: false, error: "Failed to upload image to Cloudinary." },
           { status: 500 }
         );
       }
+    }
+
+    if (!to && current) {
+      to = null;
     }
 
     const work = new Experience({
@@ -120,7 +127,7 @@ export const POST = async (req: Request) => {
     );
   } catch (error) {
     return NextResponse.json(
-      { error: "Internal Server Error", err: error },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

@@ -1,5 +1,5 @@
 import TextHeader from "@/components/layout/TextHeader"
-import LogIn from "@/components/sections/LogIn"
+import LogIn from "@/components/sections/LoginForm/LogIn"
 import { Metadata } from "next";
 import React from "react"
 

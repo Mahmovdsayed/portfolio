@@ -1,4 +1,4 @@
-import DashboardExperiences from "@/components/sections/Dashboard/DashboardExperiences";
+import ExperienceLayout from "@/components/sections/Dashboard/Experience/ExperienceLayout";
 import { cookies } from "next/headers";
 
 const fetchData = async () => {
@@ -12,7 +12,7 @@ const fetchData = async () => {
                 "Cookie": `userToken=${token}`,
 
             },
-            cache: "no-store",
+            cache: "default",
             credentials: "include"
         });
         return res.json();
@@ -27,7 +27,7 @@ const page = async () => {
     return <>
         <main className="min-h-[100dvh] overflow-x-hidden">
             <div className="container mx-auto py-6 px-4">
-                <DashboardExperiences data={data} />
+                <ExperienceLayout data={data} />
             </div>
         </main>
     </>;

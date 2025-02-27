@@ -1,4 +1,4 @@
-import DashboardNav from "@/components/sections/Dashboard/DashboardNav";
+import DashboardNav from "@/components/layout/DashboardNav";
 import { DecodeAndVerifyJWT } from "@/functions/Decode";
 import { Providers } from "@/providers/Providers";
 import { Metadata } from "next";

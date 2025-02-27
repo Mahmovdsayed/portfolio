@@ -1,5 +1,5 @@
 import TextHeader from "@/components/layout/TextHeader";
-import OtpVerify from "@/components/sections/OtpVerify";
+import OtpVerify from "@/components/sections/OTP/OtpVerify";
 
 const Page = () => {
 

@@ -25,7 +25,7 @@ export const GET = async (req: Request) => {
       );
     }
 
-    const user = await User.findById(decoded.id).select("-password");
+    const user = await User.findById(decoded.id).select("-password -otp  -otpExpiry");
     return NextResponse.json(
       {
         success: true,

@@ -1,4 +1,4 @@
-import DashboardInfo from "@/components/sections/Dashboard/DashboardInfo";
+import DashboardInfo from "@/components/sections/Dashboard/Info/DashboardInfo";
 import { cookies } from "next/headers";
 
 const fetchData = async () => {
@@ -12,7 +12,7 @@ const fetchData = async () => {
                 "Cookie": `userToken=${token}`,
 
             },
-            cache: "no-store",
+            cache: "default",
             credentials: "include"
         });
         return res.json();

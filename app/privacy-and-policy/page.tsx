@@ -1,5 +1,5 @@
 import TextHeader from "@/components/layout/TextHeader";
-import PrivacyPolicy from "@/components/sections/PrivacyPolicy";
+import PrivacyPolicy from "@/components/sections/PrivacyPolicy/PrivacyPolicy";
 import { Divider } from "@heroui/react";
 
 const page = () => {

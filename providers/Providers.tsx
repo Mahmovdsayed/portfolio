@@ -1,9 +1,8 @@
 "use client"
 
-import { HeroUIProvider } from '@heroui/react'
+import { HeroUIProvider, ToastProvider } from '@heroui/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react';
-import { Toaster } from 'sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 export function Providers({ children }: { children: React.ReactNode }) {
 
@@ -13,11 +12,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return <>
         <HeroUIProvider navigate={router.push}>
             <QueryClientProvider client={queryClient}>
-                <Toaster
-                    duration={1000}
-                    position='top-center'
-                    theme={"dark"}
-                    expand={false}
+                <ToastProvider
+                    placement='top-center'
                 />
                 {children}
             </QueryClientProvider>

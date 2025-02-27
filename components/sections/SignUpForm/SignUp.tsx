@@ -1,11 +1,10 @@
 'use client'
-import { Alert, Button, Checkbox, Form, Input, Link, Spinner } from "@heroui/react";
+import { addToast, Alert, Button, Checkbox, Form, Input, Link, Spinner, toast } from "@heroui/react";
 import { IoLogIn } from "react-icons/io5";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userValidationSchema } from "@/Validation/userValidation";
 import { z } from "zod";
-import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -52,20 +51,46 @@ const SignUp = () => {
 
             const result = await response.json();
             if (result.success) {
-                toast.success("User created successfully!", {
-                    duration: 5000,
-                });
+                addToast({
+                    title: "User created successfully!",
+                    color: "foreground",
+                    radius: "sm",
+                    variant: "flat",
+                    size: "sm",
+                    shadow: "lg",
+                    timeout: 5000,
+                    description: "Please check your email to verify your account.",
+                    shouldShowTimeoutProgess: true,
+                })
+
                 ConfettiFireworks()
                 setTimeout(() => {
                     router.push(`/verify?email=${data.email}`);
-                }, 5000);
+                }, 2000);
             } else {
-                toast.warning(result.message || "Failed to create user.", {
-                    duration: 5000,
-                });
+                addToast({
+                    title: result.message || "Failed to create user.",
+                    color: "foreground",
+                    radius: "sm",
+                    size: "sm",
+                    timeout: 5000,
+                    variant: "flat",
+                    shadow: "lg",
+                    description: "Something went wrong!",
+                    shouldShowTimeoutProgess: true,
+                })
             }
         } catch (error) {
-            toast.error(`An error occurred. Please try again.`);
+            addToast({
+                title: "An error occurred. Please try again.",
+                color: "foreground",
+                variant: "flat",
+                shadow: "lg",
+                size: "sm",
+                radius: "sm",
+                timeout: 5000,
+                shouldShowTimeoutProgess: true,
+            })
         } finally {
             setLoading(false);
         }

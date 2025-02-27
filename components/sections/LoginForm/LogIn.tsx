@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { IoLogIn } from "react-icons/io5";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
 import { LogInFunction } from "@/functions/Login";
-import { Alert, Button, Input, Link, Spinner } from "@heroui/react";
+import { addToast, Alert, Button, Input, Link, Spinner } from "@heroui/react";
 import { EyeSlashFilledIcon } from "@/icons/EyeSlashFilledIcon";
 import { EyeFilledIcon } from "@/icons/EyeFilledIcon";
 import { ConfettiCustomShapes } from "@/functions/ConfettiCustomShapes";
@@ -62,22 +61,44 @@ const LogIn = () => {
             const res = await LogInFunction(values.email, values.password);
 
             if (res.success) {
-                toast.success(res.message, {
-                    duration: 5000,
-                });
+                addToast({
+                    title: res.message,
+                    color: "foreground",
+                    radius: "sm",
+                    variant: "flat",
+                    size: "sm",
+                    shadow: "lg",
+                    timeout: 5000,
+                    shouldShowTimeoutProgess: true
+                })
                 ConfettiCustomShapes()
                 setTimeout(() => {
                     router.push("/dashboard");
                 }, 2000);
             } else {
-                toast.error(res.message, {
-                    duration: 5000,
-                });
+                addToast({
+                    title: res.message || "Failed to Login",
+                    color: "foreground",
+                    radius: "sm",
+                    size: "sm",
+                    timeout: 5000,
+                    variant: "flat",
+                    shadow: "lg",
+                    description: "Something went wrong!",
+                    shouldShowTimeoutProgess: true,
+                })
             }
         } catch (error) {
-            toast.error("Something went wrong, please try again", {
-                duration: 5000,
-            });
+            addToast({
+                title: "An error occurred. Please try again.",
+                color: "foreground",
+                variant: "flat",
+                shadow: "lg",
+                size: "sm",
+                radius: "sm",
+                timeout: 5000,
+                shouldShowTimeoutProgess: true,
+            })
         } finally {
             setIsSubmitting(false);
         }

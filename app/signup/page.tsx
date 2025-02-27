@@ -1,5 +1,5 @@
 import TextHeader from "@/components/layout/TextHeader";
-import SignUp from "@/components/sections/SignUp";
+import SignUp from "@/components/sections/SignUpForm/SignUp";
 import { Metadata } from "next";
 
 

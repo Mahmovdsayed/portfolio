@@ -4,7 +4,7 @@ import DashboardMainTitle from "@/components/UI/DashboardMainTitle";
 import DashBoardModal from "@/components/UI/DashBoardModal";
 import { getTimeSince } from "@/functions/formatDuration";
 import { updateUserSchema } from "@/Validation/updateUser";
-import { Alert, Button, Card, CardBody, CardHeader, Chip, Divider, Image, Input, Link, Textarea } from "@heroui/react";
+import { addToast, Alert, Button, Card, CardBody, CardHeader, Chip, Divider, Image, Input, Link, Textarea } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -12,8 +12,8 @@ import { FaEdit } from "react-icons/fa";
 import { FaSave } from "react-icons/fa";
 import { z } from "zod";
 import axios from "axios";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { MdVerified } from "react-icons/md";
 
 type UserFormValues = z.infer<typeof updateUserSchema>;
 
@@ -53,22 +53,59 @@ const DashboardInfo = ({ data }: { data: any }) => {
 
                 if (data.status) {
                     router.refresh()
-                    toast.success(data.message || "User updated successfully!", {
-                        duration: 4500
-                    });
+                    addToast({
+                        color: "foreground",
+                        variant: "flat",
+                        title: data.message || "User updated successfully!",
+                        timeout: 4500,
+                        shouldShowTimeoutProgess: true,
+                        description: "Your information has been updated successfully!",
+                        shadow: "lg",
+                        size: "sm",
+                        radius: "sm",
+                    })
+                    handleCloseModal();
                 } else {
-                    toast.error(data.errorMassage || "Failed to update user info.", {
-                        duration: 4500
-                    });
+                    addToast({
+                        color: "foreground",
+                        variant: "flat",
+                        title: data.message || "Something went wrong!",
+                        timeout: 4500,
+                        shouldShowTimeoutProgess: true,
+                        description: "Something went wrong!",
+                        shadow: "lg",
+                        size: "sm",
+                        radius: "sm",
+                    })
                 }
                 handleCloseModal();
             } else {
-                toast("No changes detected.", { icon: "ℹ️", duration: 3500 });
+                addToast({
+                    color: "foreground",
+                    variant: "flat",
+                    title: "No changes detected!",
+                    timeout: 4500,
+                    shouldShowTimeoutProgess: true,
+                    description: "You haven't made any changes to your information.",
+                    shadow: "lg",
+                    size: "sm",
+                    radius: "sm",
+                })
+                handleCloseModal();
             }
         } catch (error: any) {
-            toast.error(error.response?.data?.errorMassage || "Something went wrong!", {
-                duration: 4500
-            });
+            addToast({
+                color: "foreground",
+                variant: "flat",
+                title: error.response?.data?.errorMassage || "Something went wrong!",
+                timeout: 4500,
+                shouldShowTimeoutProgess: true,
+                description: "Something went wrong!",
+                shadow: "lg",
+                size: "sm",
+                radius: "sm",
+            })
+
         } finally {
             setIsLoading(false);
         }
@@ -147,7 +184,7 @@ const DashboardInfo = ({ data }: { data: any }) => {
                         <div>
                             <h5 className="font-semibold text-sm md:text-base">Email:</h5>
                             <p className="text-sm md:text-base text-default-600">
-                                {data?.user?.email}
+                                {data?.user?.email} {data?.user?.isVerified ? <Chip title="Verified" size="sm" startContent={<MdVerified />} radius="sm" className="ms-1 bg-transparent text-black">Verified</Chip> : "Not Verified"}
                             </p>
                         </div>
                         <div>

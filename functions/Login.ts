@@ -5,9 +5,21 @@ import { connectToDatabase } from "@/lib/dbConnection";
 import User from "@/models/user.model";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { loginSchema } from "@/Validation/LoginValidation";
+import { z } from "zod";
 
 const LogInFunction = async (email: string, password: string) => {
   await connectToDatabase();
+
+  try {
+    loginSchema.parse({ email, password });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { success: false, message: error.errors[0].message };
+    }
+    return { success: false, message: "Invalid input data" };
+  }
+
   try {
     const isEmailExist = await User.findOne({ email });
 
@@ -21,15 +33,6 @@ const LogInFunction = async (email: string, password: string) => {
     if (!isPassMatched) {
       return { success: false, message: "Invalid login credentials" };
     }
-
-    const userData = {
-      _id: isEmailExist._id,
-      userName: isEmailExist.userName,
-      email: isEmailExist.email,
-      firstName: isEmailExist.firstName,
-      secondName: isEmailExist.secondName,
-      image: isEmailExist.image,
-    };
 
     const token = jwt.sign(
       {
