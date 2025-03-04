@@ -17,6 +17,13 @@ export const POST = async (req: Request) => {
       );
     }
 
+    if (user.isVerified) {
+      return NextResponse.json(
+        { success: false, message: "User is already verified." },
+        { status: 400 }
+      );
+    }
+
     if (user.otp !== otp) {
       return NextResponse.json(
         { success: false, message: "Invalid OTP." },

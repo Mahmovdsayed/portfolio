@@ -18,6 +18,13 @@ export const POST = async (req: Request) => {
       );
     }
 
+    if (user.isVerified) {
+      return NextResponse.json(
+        { success: false, message: "User is already verified." },
+        { status: 400 }
+      );
+    }
+
     const newOTP = generateOTP();
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 

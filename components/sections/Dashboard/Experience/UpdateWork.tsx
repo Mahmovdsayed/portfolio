@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
 import { DatePicker, Checkbox, Form, SelectItem, Select, Button } from "@heroui/react";
-import { IoMdAdd } from "react-icons/io";
+import { FaEdit, FaSave } from "react-icons/fa";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DashBoardModal from "@/components/UI/DashBoardModal";
@@ -10,37 +10,52 @@ import { Controller, SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { ExperienceValidationSchema } from "@/Validation/ExperienceValidation";
 import { z } from "zod";
 import { Input, Textarea, Alert } from "@heroui/react";
-import { parseDate, getLocalTimeZone } from "@internationalized/date";
-import { FaSave } from "react-icons/fa";
+import { parseDate } from "@internationalized/date";
 import { employmentType } from "@/static/constant";
-import { postData } from "@/services/services";
+import { putData } from "@/services/services";
 import { AddToast } from "@/functions/AddToast";
-
-
 
 type WorkFormValues = z.infer<typeof ExperienceValidationSchema>;
 
-const AddNewWork = () => {
+interface IProps {
+    id: string;
+    data: any;
+}
+
+const UpdateWork = ({ id, data }: IProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const handleOpenModal = () => setIsModalOpen(true);
+    const handleOpenModal = () => {
+        reset({
+            companyName: data?.companyName || "",
+            positionName: data?.positionName || "",
+            description: data?.description || "",
+            from: data?.from || "",
+            to: data?.to || "",
+            employmentType: data?.employmentType || "Full-time",
+            current: data?.current || false,
+        });
+        setIsModalOpen(true);
+    };
     const handleCloseModal = () => setIsModalOpen(false);
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
 
+
     const { control, register, handleSubmit, formState: { errors }, setValue, reset } = useForm<WorkFormValues>({
         resolver: zodResolver(ExperienceValidationSchema),
         defaultValues: {
-            companyName: "",
-            positionName: "",
-            description: "",
-            from: "",
-            to: "",
-            employmentType: "Full-time",
+            companyName: data?.companyName || "",
+            positionName: data?.positionName || "",
+            description: data?.description || "",
+            from: data?.from || "",
+            to: data?.to || "",
+            employmentType: data?.employmentType || "Full-time",
             companyImage: null,
-            current: false,
+            current: data?.current || false,
         }
     });
+
     const current = useWatch({ control, name: "current" });
 
     const onSubmit: SubmitHandler<WorkFormValues> = async (formData) => {
@@ -56,7 +71,7 @@ const AddNewWork = () => {
             }
             formDataToSend.append("employmentType", formData.employmentType);
             formDataToSend.append("current", formData.current!.toString());
-
+            formDataToSend.append("id", id);
             if (formData.from) {
                 const fromDate = new Date(formData.from);
                 formDataToSend.append("from", `${fromDate.getMonth() + 1}/${fromDate.getDate()}/${fromDate.getFullYear()}`);
@@ -66,29 +81,32 @@ const AddNewWork = () => {
                 formDataToSend.append("to", `${toDate.getMonth() + 1}/${toDate.getDate()}/${toDate.getFullYear()}`);
             }
 
-            const companyImageInput = document.querySelector('input[name="companyImage"]') as HTMLInputElement;
-            if (companyImageInput && companyImageInput.files && companyImageInput.files[0]) {
-                formDataToSend.append("companyImage", companyImageInput.files[0]);
-            }
+            const response = await putData(`/work/update`, formDataToSend);
 
-            const response = await postData('/work/add', formDataToSend);
-
-            if (response.success) {
+            if (response.status) {
                 AddToast(
-                    "Experience added successfully!",
-                    "Your work experience has been added successfully!",
+                    "Experience updated successfully!",
+                    "Your work experience has been updated successfully!",
                     4500,
                     "success"
                 );
 
+                reset({
+                    companyName: response.updatedWork.companyName,
+                    positionName: response.updatedWork.positionName,
+                    description: response.updatedWork.description,
+                    from: response.updatedWork.from,
+                    to: response.updatedWork.to,
+                    employmentType: response.updatedWork.employmentType,
+                    current: response.updatedWork.current,
+                });
+
                 router.refresh();
-                reset();
                 handleCloseModal();
             } else {
-                handleCloseModal();
                 AddToast(
                     "Something went wrong!",
-                    response.message || "Failed to add work experience.",
+                    response.message || "Failed to update work experience.",
                     4500,
                     "danger"
                 )
@@ -96,36 +114,36 @@ const AddNewWork = () => {
         } catch (error: any) {
             AddToast(
                 "Something went wrong!",
-                "Failed to add work experience.",
+                "Failed to update work experience.",
                 4500,
                 "danger"
             )
-            handleCloseModal();
         } finally {
             setIsLoading(false);
         }
     };
 
+    return (
+        <>
+            <Button
+                onPress={handleOpenModal}
+                variant="flat"
+                color="primary"
+                className="font-medium w-full"
+                startContent={<FaEdit />}
+                size="sm"
+                radius="sm"
+            >
+                Update
+            </Button>
 
-    return <>
-        <Button
-            onPress={handleOpenModal}
-            variant="bordered"
-            className="font-medium"
-            startContent={<IoMdAdd />}
-            size="sm"
-            radius="sm">Add Work
-        </Button>
-
-        <DashBoardModal
-            title="Add New Work Experience"
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-        >
-            <div>
+            <DashBoardModal
+                title="Update Work Experience"
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+            >
                 <Form
-                    action="/api/work/add"
-                    method="post"
+
                     className="w-full flex mx-auto flex-col gap-3"
                     onSubmit={handleSubmit(onSubmit)}
                     encType="multipart/form-data"
@@ -161,10 +179,11 @@ const AddNewWork = () => {
                     {errors.positionName && (
                         <Alert color="warning" className="mt-2 font-medium" title={errors.positionName.message} />
                     )}
+
                     <Controller
                         name="employmentType"
                         control={control}
-                        defaultValue="Full-time"
+                        defaultValue={data?.employmentType || "Full-time"}
                         render={({ field }) => (
                             <Select
                                 {...field}
@@ -173,7 +192,7 @@ const AddNewWork = () => {
                                 isRequired
                                 radius="sm"
                                 size="sm"
-                                value={field.value}
+                                selectedKeys={[field.value]}
                                 placeholder="Select employment type"
                                 onChange={(value) => field.onChange(value)}
                             >
@@ -197,7 +216,6 @@ const AddNewWork = () => {
                         labelPlacement="inside"
                         label="Description"
                         placeholder="Enter Description"
-
                         radius="sm"
                         size="sm"
                     />
@@ -208,23 +226,26 @@ const AddNewWork = () => {
                     <Controller
                         name="from"
                         control={control}
-                        render={({ field }) => (
-                            <DatePicker
-                                {...field}
-                                isRequired
-                                showMonthAndYearPickers
-                                id="from"
-                                variant="bordered"
-                                label="Enter Start Date"
-
-                                radius="sm"
-                                size="sm"
-                                value={field.value ? parseDate(field.value) : null}
-                                onChange={(dateValue) => {
-                                    field.onChange(dateValue?.toString());
-                                }}
-                            />
-                        )}
+                        render={({ field }) => {
+                            const isoDate = field.value ? new Date(field.value).toISOString().split('T')[0] : null;
+                            return (
+                                <DatePicker
+                                    {...field}
+                                    isRequired
+                                    showMonthAndYearPickers
+                                    id="from"
+                                    variant="bordered"
+                                    label="Enter Start Date"
+                                    radius="sm"
+                                    size="sm"
+                                    value={isoDate ? parseDate(isoDate) : null}
+                                    onChange={(dateValue) => {
+                                        const formattedDate = dateValue ? `${dateValue.year}-${String(dateValue.month).padStart(2, '0')}-${String(dateValue.day).padStart(2, '0')}` : "";
+                                        field.onChange(formattedDate);
+                                    }}
+                                />
+                            );
+                        }}
                     />
                     {errors.from && (
                         <Alert color="warning" className="mt-2 font-medium" title={errors.from.message} />
@@ -233,24 +254,28 @@ const AddNewWork = () => {
                     <Controller
                         name="to"
                         control={control}
-                        render={({ field }) => (
-                            <DatePicker
-                                {...field}
-                                showMonthAndYearPickers
-                                id="to"
-                                variant="bordered"
-                                label="Enter End Date"
-
-                                radius="sm"
-                                size="sm"
-                                value={field.value ? parseDate(field.value) : null}
-                                onChange={(dateValue) => {
-                                    field.onChange(dateValue?.toString());
-                                }}
-                                isDisabled={current}
-                            />
-                        )}
+                        render={({ field }) => {
+                            const isoDate = field.value ? new Date(field.value).toISOString().split('T')[0] : null;
+                            return (
+                                <DatePicker
+                                    {...field}
+                                    showMonthAndYearPickers
+                                    id="to"
+                                    variant="bordered"
+                                    label="Enter End Date"
+                                    radius="sm"
+                                    size="sm"
+                                    value={isoDate ? parseDate(isoDate) : null}
+                                    onChange={(dateValue) => {
+                                        const formattedDate = dateValue ? `${dateValue.year}-${String(dateValue.month).padStart(2, '0')}-${String(dateValue.day).padStart(2, '0')}` : "";
+                                        field.onChange(formattedDate);
+                                    }}
+                                    isDisabled={current}
+                                />
+                            );
+                        }}
                     />
+
                     {errors.to && (
                         <Alert color="warning" className="mt-2 font-medium" title={errors.to.message} />
                     )}
@@ -272,22 +297,6 @@ const AddNewWork = () => {
                         I currently work here
                     </Checkbox>
 
-                    <Input
-
-                        id="companyImage"
-                        name="companyImage"
-                        variant="bordered"
-                        labelPlacement="inside"
-                        label="Company Image"
-
-                        radius="sm"
-                        size="sm"
-                        type="file"
-                        accept="image/*"
-                    />
-                    {errors.companyImage && (
-                        <Alert color="warning" className="mt-2 font-medium" title={errors.companyImage.message} />
-                    )}
                     <Button
                         type="submit"
                         size="sm"
@@ -297,12 +306,12 @@ const AddNewWork = () => {
                         isLoading={isLoading}
                         startContent={<FaSave />}
                     >
-                        {isLoading ? "Saving..." : "Save"}
+                        {isLoading ? "Updating..." : "Update"}
                     </Button>
                 </Form>
-            </div>
-        </DashBoardModal>
-    </>;
+            </DashBoardModal>
+        </>
+    );
 };
 
-export default AddNewWork;
+export default UpdateWork;

@@ -19,6 +19,7 @@ const ExperienceLayout = ({ data }: IProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {data?.work.map((item: any) =>
                 <WorkCard
+                    allData={item}
                     key={item._id}
                     companyName={item.companyName}
                     positionName={item.positionName}

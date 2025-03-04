@@ -1,9 +1,12 @@
 'use client'
 
-import { Card, CardBody, CardFooter, CardHeader, Button, Image, addToast } from "@heroui/react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { FaTrash, FaEdit, FaEye } from "react-icons/fa";
+import { Card, CardBody, CardFooter, Button, Image, Textarea } from "@heroui/react";
+import { FaEye } from "react-icons/fa";
+import DashBoardModal from "./DashBoardModal";
+import { useState } from "react";
+
+import DeleteWork from "../sections/Dashboard/Experience/DeleteWork";
+import UpdateWork from "../sections/Dashboard/Experience/UpdateWork";
 
 interface IProps {
     companyName: string;
@@ -15,6 +18,7 @@ interface IProps {
     imageURL: string;
     current: boolean;
     id: string;
+    allData: any;
 }
 
 const WorkCard = ({
@@ -27,139 +31,110 @@ const WorkCard = ({
     imageURL,
     current,
     id,
-
+    allData
 }: IProps) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const handleOpenModal = () => setIsModalOpen(true);
+    const handleCloseModal = () => setIsModalOpen(false);
 
-    const router = useRouter()
-    const handleDelete = async (id: string) => {
-        try {
-            const { data } = await axios.delete("/api/work/delete", {
-                data: { workID: id },
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                withCredentials: true,
-            });
-
-            if (data.success) {
-                addToast({
-                    color: "foreground",
-                    variant: "flat",
-                    title: "Work experience deleted successfully!",
-                    timeout: 4500,
-                    shouldShowTimeoutProgess: true,
-                    description: "Your work experience has been deleted successfully!",
-                    shadow: "lg",
-                    size: "sm",
-                    radius: "sm",
-                    severity: "success"
-                });
-                router.refresh();
-            } else {
-                addToast({
-                    color: "foreground",
-                    variant: "flat",
-                    title: "Failed to delete work experience.",
-                    description: "Something went wrong.",
-                    timeout: 4500,
-                    shouldShowTimeoutProgess: true,
-                    shadow: "lg",
-                    size: "sm",
-                    radius: "sm",
-                    severity: "danger"
-                });
-            }
-        } catch (error: any) {
-            addToast({
-                color: "foreground",
-                variant: "flat",
-                title: "An error occurred!",
-                timeout: 4500,
-                shouldShowTimeoutProgess: true,
-                description: "Something went wrong.",
-                shadow: "lg",
-                size: "sm",
-                radius: "sm",
-                severity: "danger"
-            });
-        }
-    };
-
-    const handleUpdate = () => {
-        console.log("Update card with ID:", id);
-    };
 
     const handleView = () => {
-        console.log("View card with ID:", id);
+        handleOpenModal();
     };
 
     return (
-        <Card shadow="none">
-            <CardHeader className="p-4 border-b">
-                <div className="flex items-center space-x-4">
-                    <Image
-                        src={imageURL}
-                        alt={companyName}
-                        className="w-12 h-12 object-center object-cover"
-                    />
-                    <div>
-                        <h3 className="text-lg font-semibold capitalize">{companyName}</h3>
-                        <p className="text-sm text-default-600">{positionName}</p>
+        <>
+            <Card shadow="none">
+                <CardBody className="p-4">
+                    <div className="flex items-center space-x-4">
+                        <Image
+                            src={imageURL}
+                            alt={companyName}
+                            className="w-12 h-12 rounded-full object-cover"
+                        />
+
+                        <div>
+                            <h3 className="text-md font-semibold capitalize">{companyName}</h3>
+                            <p className="text-sm text-gray-600 capitalize">{positionName}</p>
+                        </div>
+                    </div>
+
+                    <div className="mt-3 space-y-1">
+                        <p className="text-sm text-gray-700">
+                            <span className="font-medium">Type:</span> {employmentType}
+                        </p>
+                        <p className="text-sm text-gray-700">
+                            <span className="font-medium">Duration:</span> {startDate} - {current ? "Present" : endDate}
+                        </p>
+                    </div>
+                </CardBody>
+
+                <CardFooter className="p-4 border-t">
+                    <div className="flex items-center justify-center w-full space-x-2">
+                        <DeleteWork id={id} />
+                        <UpdateWork data={allData} id={id} />
+                        <Button
+                            radius="sm"
+                            className="w-full font-medium"
+                            size="sm"
+                            variant="flat"
+                            color="secondary"
+                            startContent={<FaEye />}
+                            onClick={handleView}
+                        >
+                            View
+                        </Button>
+                    </div>
+                </CardFooter>
+            </Card>
+
+
+            <DashBoardModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                title="Work Experience Details"
+            >
+                <div className="space-y-4">
+                    <div className="flex items-center space-x-3 ">
+                        <Image
+                            src={imageURL}
+                            alt={companyName}
+                            className="w-20 h-20 rounded-lg object-cover object-center shadow-sm"
+                        />
+                        <div>
+                            <h3 className="text-xl font-bold text-gray-800">{companyName}</h3>
+                            <p className="text-sm text-gray-600">{positionName}</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        <div className="space-y-2">
+                            <p className="text-sm text-gray-700">
+                                <span className="font-semibold">Employment Type:</span> {employmentType}
+                            </p>
+                            <p className="text-sm text-gray-700">
+                                <span className="font-semibold">Duration:</span> {startDate} - {current ? "Present" : endDate}
+                            </p>
+                            {description && (
+                                <div className="mt-2 ">
+                                    <p className="text-sm text-gray-700">
+                                        <span className="font-semibold">Description:</span>
+                                    </p>
+                                    <Textarea
+                                        defaultValue={description}
+                                        isReadOnly
+                                        className="mt-2 font-medium"
+                                        variant="underlined"
+                                        size="sm"
+                                        radius="sm"
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </CardHeader>
-            <CardBody className="p-4">
-                <div className="space-y-2">
-                    <p className="text-sm text-default-600">
-                        <span className="font-medium">Employment Type:</span> {employmentType}
-                    </p>
-                    <p className="text-sm text-default-600">
-                        <span className="font-medium">Duration:</span> {startDate} - {current ? "Present" : endDate}
-                    </p>
-                    {description != null ?
-                        <p className="text-sm text-default-600">
-                            <span className="font-medium">Description:</span> {description}
-                        </p>
-                        : ""
-                    }
-
-                </div>
-            </CardBody>
-            <CardFooter className="p-4 border-t">
-                <div className="flex w-full items-center justify-between space-x-2">
-                    <Button
-                        radius="sm"
-                        className="w-full font-medium"
-                        color="danger"
-                        variant="flat"
-                        startContent={<FaTrash />}
-                        onClick={() => handleDelete(id)}
-                    >
-                        Delete
-                    </Button>
-                    <Button
-                        radius="sm"
-                        className="w-full font-medium"
-                        color="primary"
-                        variant="flat"
-                        startContent={<FaEdit />}
-                        onClick={handleUpdate}
-                    >
-                        Update
-                    </Button>
-                    <Button
-                        radius="sm"
-                        className="w-full font-medium"
-                        variant="flat"
-                        color="secondary"
-                        startContent={<FaEye />}
-                        onClick={handleView}
-                    >
-                        View
-                    </Button>
-                </div>
-            </CardFooter>
-        </Card>
+            </DashBoardModal>
+        </>
     );
 };
 

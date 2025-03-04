@@ -1,8 +1,7 @@
 "use client";
-import { Button } from "@heroui/react";
+import { addToast, Button, Form } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { MdVerified, MdRefresh } from "react-icons/md";
-import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { InputOtp } from "@heroui/react";
 import React, { useState } from "react";
@@ -32,13 +31,43 @@ const OtpVerify = () => {
             const data = await response.json();
 
             if (data.success) {
-                toast.success(data.message, { duration: 4000 });
+                addToast({
+                    title: data.message,
+                    color: "foreground",
+                    radius: "sm",
+                    size: "sm",
+                    shadow: "lg",
+                    variant: "flat",
+                    shouldShowTimeoutProgess: true,
+                    timeout: 4000,
+                    severity: "success",
+                });
                 router.push("/login");
             } else {
-                toast.error(data.message, { duration: 4000 });
+                addToast({
+                    title: data.message,
+                    color: "foreground",
+                    radius: "sm",
+                    size: "sm",
+                    shadow: "lg",
+                    variant: "flat",
+                    shouldShowTimeoutProgess: true,
+                    timeout: 4000,
+                    severity: "danger",
+                });
             }
         } catch (error) {
-            toast.error("Something went wrong. Please try again.");
+            addToast({
+                title: "Something went wrong. Please try again.",
+                color: "foreground",
+                radius: "sm",
+                size: "sm",
+                shadow: "lg",
+                variant: "flat",
+                shouldShowTimeoutProgess: true,
+                timeout: 4000,
+                severity: "danger",
+            });
         } finally {
             setLoading(false);
         }
@@ -60,46 +89,86 @@ const OtpVerify = () => {
             const data = await response.json();
 
             if (data.success) {
-                toast.success("New OTP sent successfully.", { duration: 4000 });
+                addToast({
+                    title: data.message,
+                    color: "foreground",
+                    radius: "sm",
+                    size: "sm",
+                    shadow: "lg",
+                    variant: "flat",
+                    shouldShowTimeoutProgess: true,
+                    timeout: 4000,
+                    severity: "success",
+                });
             } else {
-                toast.error(data.message, { duration: 4000 });
+                addToast({
+                    title: data.message,
+                    color: "foreground",
+                    radius: "sm",
+                    size: "sm",
+                    shadow: "lg",
+                    variant: "flat",
+                    shouldShowTimeoutProgess: true,
+                    timeout: 4000,
+                    severity: "danger",
+                });
             }
         } catch (error) {
-            toast.error("Something went wrong. Please try again.");
+            addToast({
+                title: "Something went wrong. Please try again.",
+                color: "foreground",
+                radius: "sm",
+                size: "sm",
+                shadow: "lg",
+                variant: "flat",
+                shouldShowTimeoutProgess: true,
+                timeout: 4000,
+                severity: "danger",
+            });
         } finally {
             setResendLoading(false);
         }
     };
 
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        verifyOTP();
+    };
+
     return (
         <div className="mt-4 text-start lg:w-9/12 lg:mx-auto">
-            <InputOtp
-                variant="faded"
-                size="lg"
-                textAlign="center"
-                length={6}
-                value={value}
-                onValueChange={setValue}
-            />
-            <div className="mt-4 flex flex-col gap-2">
-                <Button
-                    className="w-full md:w-fit"
-                    startContent={<MdVerified />}
-                    onPress={verifyOTP}
-                    isLoading={loading}
-                >
-                    Verify
-                </Button>
-                <Button
-                    className="w-full md:w-fit bg-transparent text-black p-0"
-
-                    startContent={<MdRefresh />}
-                    onPress={requestNewOTP}
-                    isLoading={resendLoading}
-                >
-                    Request New OTP
-                </Button>
-            </div>
+            <Form
+                onSubmit={handleSubmit}>
+                <InputOtp
+                    variant="faded"
+                    size="lg"
+                    textAlign="center"
+                    length={6}
+                    isRequired
+                    value={value}
+                    onValueChange={setValue}
+                />
+                <div className="mt-4 flex flex-col gap-2">
+                    <Button
+                        className="w-full md:w-fit"
+                        startContent={<MdVerified />}
+                        onPress={verifyOTP}
+                        isLoading={loading}
+                        type="submit"
+                    >
+                        Verify
+                    </Button>
+                    <Button
+                        className="w-full md:w-fit bg-transparent text-black p-0"
+                        type="button"
+                        startContent={<MdRefresh />}
+                        onPress={requestNewOTP}
+                        isLoading={resendLoading}
+                    >
+                        Request New OTP
+                    </Button>
+                </div>
+            </Form>
         </div>
     );
 };

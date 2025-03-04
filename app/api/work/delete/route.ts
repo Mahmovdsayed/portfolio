@@ -39,8 +39,8 @@ export const DELETE = async (req: Request) => {
       );
     }
 
-    const { workID } = await req.json();
-    const work = await Experience.findById(workID);
+    const { id } = await req.json();
+    const work = await Experience.findById(id);
 
     if (!work) {
       return NextResponse.json(
@@ -53,7 +53,7 @@ export const DELETE = async (req: Request) => {
       await cloudinary.uploader.destroy(work.companyImage.public_id);
     }
 
-    await Experience.findByIdAndDelete(workID);
+    await Experience.findByIdAndDelete(id);
 
     return NextResponse.json(
       { success: true, message: "Work experience deleted successfully" },
