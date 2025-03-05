@@ -103,6 +103,7 @@ export const PATCH = async (req: Request) => {
       user,
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { status: false, errorMassage: "Something went wrong!" },
       { status: 500 }

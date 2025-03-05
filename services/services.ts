@@ -45,7 +45,7 @@ const putData = async (url: string, newData: any) => {
     });
     return data;
   } catch (error) {
-    console.error(error);
+    console.error("Error in putData");
     return null;
   }
 };
@@ -66,4 +66,21 @@ const deleteData = async (url: string, id: string) => {
   }
 };
 
-export { getData, postData, putData, deleteData };
+const updateUser = async (newData: any) => {
+  try {
+    const token = (await cookies()).get("userToken")?.value;
+    const { data } = await api.patch(`/user/update`, newData, {
+      headers: {
+        Cookie: `userToken=${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/jsonn",
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error in updateUser");
+    return null;
+  }
+};
+
+export { getData, postData, putData, deleteData, updateUser };
