@@ -65,6 +65,26 @@ const userSchema = new Schema(
       type: Date,
       default: null,
     },
+    nationality: {
+      type: String,
+      trim: true,
+      default: "No nationality provided",
+    },
+    country: {
+      type: String,
+      trim: true,
+      default: "No country provided",
+    },
+    city: {
+      type: String,
+      trim: true,
+      default: "No city provided",
+    },
+    positionName: {
+      type: String,
+      trim: true,
+      default: "No position provided",
+    },
   },
   { timestamps: true }
 );

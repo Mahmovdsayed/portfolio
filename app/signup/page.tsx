@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 
-const page = () => {
+const page = async () => {
     return <>
         <main className="min-h-[100dvh] overflow-x-hidden">
             <div className="container mx-auto px-4 py-6">

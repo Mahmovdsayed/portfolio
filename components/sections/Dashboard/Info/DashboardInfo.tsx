@@ -7,7 +7,6 @@ import { MdVerified } from "react-icons/md";
 import UpdateUserInfo from "./UpdateUserInfo";
 
 const DashboardInfo = ({ data }: { data: any }) => {
-
     return <>
 
         <div className="mb-4">
@@ -75,6 +74,30 @@ const DashboardInfo = ({ data }: { data: any }) => {
                             <h5 className="font-semibold text-sm md:text-base">Email:</h5>
                             <p className="text-sm md:text-base text-default-600">
                                 {data?.user?.email} {data?.user?.isVerified ? <Chip title="Verified" size="sm" startContent={<MdVerified />} radius="sm" className="ms-1 bg-transparent text-black">Verified</Chip> : "Not Verified"}
+                            </p>
+                        </div>
+                        <div>
+                            <h5 className="font-semibold text-sm md:text-base">Current Position:</h5>
+                            <p className="text-sm md:text-base text-default-600">
+                                {data?.user?.positionName}
+                            </p>
+                        </div>
+                        <div>
+                            <h5 className="font-semibold text-sm md:text-base">Country:</h5>
+                            <p className="text-sm md:text-base text-default-600">
+                                {data?.user?.country}
+                            </p>
+                        </div>
+                        <div>
+                            <h5 className="font-semibold text-sm md:text-base">City:</h5>
+                            <p className="text-sm md:text-base text-default-600">
+                                {data?.user?.city}
+                            </p>
+                        </div>
+                        <div>
+                            <h5 className="font-semibold text-sm md:text-base">Nationality:</h5>
+                            <p className="text-sm md:text-base text-default-600">
+                                {data?.user?.nationality}
                             </p>
                         </div>
                         <div>

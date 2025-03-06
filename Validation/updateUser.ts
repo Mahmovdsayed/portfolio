@@ -67,7 +67,39 @@ export const updateUserSchema = z.object({
     .trim()
     .max(200, { message: "Bio must be at most 200 characters" })
     .optional(),
-
+  nationality: z
+    .string()
+    .trim()
+    .min(2, { message: "Nationality must be at least 2 characters" })
+    .max(50, { message: "Nationality must be at most 50 characters" })
+    .regex(/^[A-Za-z\s]+$/, {
+      message: "Nationality can only contain letters and spaces",
+    })
+    .optional(),
+  country: z
+    .string()
+    .trim()
+    .min(2, { message: "Country must be at least 2 characters" })
+    .max(50, { message: "Country must be at most 50 characters" })
+    .regex(/^[A-Za-z\s]+$/, {
+      message: "Country can only contain letters and spaces",
+    })
+    .optional(),
+  city: z
+    .string()
+    .trim()
+    .min(2, { message: "City must be at least 2 characters" })
+    .max(50, { message: "City must be at most 50 characters" })
+    .regex(/^[A-Za-z\s]+$/, {
+      message: "City can only contain letters and spaces",
+    })
+    .optional(),
+  positionName: z
+    .string()
+    .trim()
+    .min(3, { message: "Position name must be at least 3 characters" })
+    .max(50, { message: "Position name cannot exceed 50 characters" })
+    .optional(),
   about: z
     .string()
     .trim()

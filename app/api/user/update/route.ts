@@ -54,8 +54,17 @@ export const PATCH = async (req: Request) => {
       );
     }
 
-    const { firstName, secondName, password, about, bio } =
-      validationResult.data;
+    const {
+      firstName,
+      secondName,
+      password,
+      about,
+      bio,
+      positionName,
+      nationality,
+      country,
+      city,
+    } = validationResult.data;
 
     if (decoded.id !== userId) {
       return NextResponse.json(
@@ -84,6 +93,10 @@ export const PATCH = async (req: Request) => {
     }
     if (about) updatedUser.about = about;
     if (bio) updatedUser.bio = bio;
+    if (positionName) updatedUser.positionName = positionName;
+    if (nationality) updatedUser.nationality = nationality;
+    if (country) updatedUser.country = country;
+    if (city) updatedUser.city = city;
 
     const user = await User.findByIdAndUpdate(userId, updatedUser, {
       new: true,
@@ -103,7 +116,6 @@ export const PATCH = async (req: Request) => {
       user,
     });
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       { status: false, errorMassage: "Something went wrong!" },
       { status: 500 }

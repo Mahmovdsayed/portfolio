@@ -20,17 +20,15 @@ const getData = async (url: string) => {
 
 const postData = async (url: string, postData: any) => {
   try {
-    const token = (await cookies()).get("userToken")?.value;
     const { data } = await api.post(url, postData, {
       headers: {
-        Cookie: `userToken=${token}`,
         "Content-Type": "multipart/form-data",
       },
     });
     return data;
-  } catch (error) {
-    console.error("Error in postData");
-    return null;
+  } catch (error: any) {
+    console.error("Error response:", error.response?.data);
+    throw error;
   }
 };
 
@@ -83,4 +81,14 @@ const updateUser = async (newData: any) => {
   }
 };
 
-export { getData, postData, putData, deleteData, updateUser };
+const allCountriesAPI = async () => {
+  try {
+    const { data } = await api.get("/allCountries");
+    return data;
+  } catch (error) {
+    console.error("Error in allCountriesAPI");
+    return null;
+  }
+};
+
+export { getData, postData, putData, deleteData, updateUser, allCountriesAPI };
